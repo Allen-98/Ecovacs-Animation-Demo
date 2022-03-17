@@ -24,7 +24,6 @@ public class NarutoControl : MonoBehaviour
 
     public void AnimationChange()
     {
-        Debug.Log(dropDown.value);
         ani.SetInteger("AnimationRank", dropDown.value);
 
     }

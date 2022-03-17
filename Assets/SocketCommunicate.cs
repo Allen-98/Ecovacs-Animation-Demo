@@ -8,8 +8,10 @@ using Newtonsoft.Json.Linq;
 
 public class SocketCommunicate : MonoBehaviour
 {
-    string address = "ws://139.217.222.214:3003";
+    string address = "ws://127.0.0.1:8899";
     WebSocket webSocket;
+    public Animator ani;
+    int index = 0;
 
     private void Start()
     {
@@ -55,6 +57,12 @@ public class SocketCommunicate : MonoBehaviour
     void OnMessageRecv(WebSocket ws, string message)
     {
         Debug.LogFormat("OnMessageRecv: msg={0}", message);
+        if (message != null)
+        {
+            int.TryParse(message, out index);
+            ani.SetInteger("AnimationRank", index);
+        }
+
     }
 
     void OnBinaryRecv(WebSocket ws, byte[] data)
