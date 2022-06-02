@@ -14,24 +14,24 @@ public class AsteroidsGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        InvokeRepeating("RandomGenerate", 1f, 0.1f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!gm.gameOver)
-        {
-            RandomGenerate();
 
-        }
 
     }
 
     public void RandomGenerate()
     {
-        GameObject obj = Instantiate(asteroids[Random.Range(0, 4)], RandomPos(), Quaternion.identity);
-        obj.transform.parent = asteroidsList.transform;
+        if (!gm.gameOver)
+        {
+            GameObject obj = Instantiate(asteroids[Random.Range(0, 4)], RandomPos(), Quaternion.identity);
+            obj.transform.parent = asteroidsList.transform;
+        }
+
     }
 
     public Vector3 RandomPos()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,6 +10,12 @@ public class GameManager : MonoBehaviour
     public GameObject Bullet;
     public GameObject BulletList;
     public GameObject Player;
+    public GameObject gameOverText;
+    public GameObject boom;
+    public Transform boomPos;
+
+    public AudioSource shootAudio;
+    public AudioSource boomAudio;
 
     public bool gameOver;
 
@@ -25,19 +32,22 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         gameOver = false;
+        gameOverText.SetActive(false);
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        SimpleControl();        
-
-        if (!player.alive)
+        if (player.alive)
         {
-            Invoke("GameOver", 1f);
+            SimpleControl();
         }
 
-
+        if (gameOver && !GameObject.Find("Boom"))
+        {
+            Time.timeScale = 0f;
+        }
 
     }
 
@@ -57,8 +67,18 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        Time.timeScale = 0f;
-        gameOver = true;
+        var temp_impact = Instantiate(boom, boomPos.position, Quaternion.LookRotation(boomPos.forward, Vector3.up));
+        temp_impact.name = "Boom";
+        Destroy(temp_impact, 1f);
+        boomAudio.Play();
+
+        if (GameObject.Find("Boom"))
+        {
+
+            gameOver = true;
+            gameOverText.SetActive(true);
+        }
+
     }
 
 
@@ -101,40 +121,49 @@ public class GameManager : MonoBehaviour
     public void Shoot()
     {
 
-        if (player.currentBullets != 0)
+        if (player.currentBullets != 0 && player.alive)
         {
             Instantiate(Bullet, BulletList.transform.position, Bullet.transform.rotation);
             player.currentBullets -= 1;
+            shootAudio.Play();
         }
     }
 
     public void TurnRight()
     {
-        float angle = PlayerShip.transform.localEulerAngles.z;
-        angle = ClampAngle(angle, minRotation, maxRotation);
-
-        if (angle > 335 || angle < 26)
+        if (player.alive)
         {
-            PlayerShip.transform.Rotate(-PlayerShip.transform.forward, Time.deltaTime * rotateSpeed);
+            float angle = PlayerShip.transform.localEulerAngles.z;
+            angle = ClampAngle(angle, minRotation, maxRotation);
 
+            if (angle > 335 || angle < 26)
+            {
+                PlayerShip.transform.Rotate(-PlayerShip.transform.forward, Time.deltaTime * rotateSpeed);
+
+            }
+
+            Player.transform.Translate(moveSpeed * Time.deltaTime, 0, 0);
         }
 
-        Player.transform.Translate(moveSpeed * Time.deltaTime, 0, 0);
     }
 
     public void TurnLeft()
     {
-
-        float angle = PlayerShip.transform.localEulerAngles.z;
-        angle = ClampAngle(angle, minRotation, maxRotation);
-
-        if (angle < 25 || angle > 334)
+        if (player.alive)
         {
-            PlayerShip.transform.Rotate(-PlayerShip.transform.forward, Time.deltaTime * -rotateSpeed);
 
+            float angle = PlayerShip.transform.localEulerAngles.z;
+            angle = ClampAngle(angle, minRotation, maxRotation);
+
+            if (angle < 25 || angle > 334)
+            {
+                PlayerShip.transform.Rotate(-PlayerShip.transform.forward, Time.deltaTime * -rotateSpeed);
+
+            }
+
+            Player.transform.Translate(-moveSpeed * Time.deltaTime, 0, 0);
         }
 
-        Player.transform.Translate(-moveSpeed * Time.deltaTime, 0, 0);
     }
 
     public void LongPressRight(bool bStart)
@@ -150,5 +179,12 @@ public class GameManager : MonoBehaviour
         isPressedLeft = bStart;
 
     }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(0);
+    }
+
 
 }

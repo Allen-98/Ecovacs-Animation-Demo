@@ -12,11 +12,17 @@ public class GameSocket : MonoBehaviour
     WebSocket webSocket;
 
     public GameManager gm;
+    public int num;
 
-    
+    private void Update()
+    {
+       //CheckNum(num);
+    }
 
     private void Start()
     {
+        num = 0; // 无抬手动作，向前直线飞行
+
         if (webSocket == null)
         {
             webSocket = new WebSocket(new Uri(address));
@@ -61,8 +67,10 @@ public class GameSocket : MonoBehaviour
         Debug.LogFormat("OnMessageRecv: msg={0}", message);
         if (message != null)
         {
-            //int.TryParse(message, out index);
-            //ani.SetInteger("AnimationRank", index);
+            int.TryParse(message, out num);
+
+            CheckNum(num);
+
         }
 
     }
@@ -75,7 +83,7 @@ public class GameSocket : MonoBehaviour
     void OnClosed(WebSocket ws, UInt16 code, string message)
     {
         Debug.LogFormat("OnClosed: code={0}, msg={1}", code, message);
-        webSocket = null;
+        Destroy();
     }
 
     void OnError(WebSocket ws, Exception ex)
@@ -89,6 +97,47 @@ public class GameSocket : MonoBehaviour
 #endif
         Debug.LogFormat("OnError: error occured: {0}\n", (ex != null ? ex.Message : "Unknown Error " + errorMsg));
         webSocket = null;
+    }
+
+
+    void CheckNum(int i)
+    {
+        if (i == 0)
+        {
+            return;
+        }
+
+        if (i == 1)
+        {
+            Debug.Log(i);
+            gm.LongPressRight(true);
+        }
+        
+        if (i == 2)
+        {
+            gm.LongPressRight(false);
+        }
+
+        if (i == 3)
+        {
+            gm.LongPressLeft(true);
+        }
+        
+        if (i == 4)
+        {
+            gm.LongPressLeft(false);
+        }
+
+        if (i == 5)
+        {
+            gm.Shoot();
+        }
+
+        if (i == 6)
+        {
+            gm.RestartGame();
+        }
+
     }
 
 }
