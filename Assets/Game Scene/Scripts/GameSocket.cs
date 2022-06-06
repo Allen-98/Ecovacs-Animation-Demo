@@ -83,7 +83,7 @@ public class GameSocket : MonoBehaviour
     void OnClosed(WebSocket ws, UInt16 code, string message)
     {
         Debug.LogFormat("OnClosed: code={0}, msg={1}", code, message);
-        Destroy();
+        webSocket = null;
     }
 
     void OnError(WebSocket ws, Exception ex)
