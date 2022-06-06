@@ -26,11 +26,14 @@ public class Player : MonoBehaviour
     public TMP_Text bulletText;
     public Slider BulletBar;
 
+    public bool wudi;
+
     private float value;
 
     // Start is called before the first frame update
     void Start()
     {
+        wudi = false;
         alive = true;
         currentHealth = maxHealth;
         currentBullets = maxBullets;
@@ -58,7 +61,7 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.tag == "Enemy" && !wudi)
         {
             crashAudio.Play();
 
@@ -143,4 +146,18 @@ public class Player : MonoBehaviour
         }
     }
     
+
+    public void ChangeWudi()
+    {
+        if (wudi)
+        {
+            wudi = false;
+        }
+        else
+        {
+            wudi = true;
+        }
+    }
+
+
 }

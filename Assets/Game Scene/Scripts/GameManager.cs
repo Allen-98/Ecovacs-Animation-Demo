@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public GameObject BulletList;
     public GameObject Player;
     public GameObject gameOverText;
+    public GameObject restartButton;
     public GameObject boom;
     public Transform boomPos;
 
@@ -31,8 +32,10 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Time.timeScale = 1f;
         gameOver = false;
         gameOverText.SetActive(false);
+        restartButton.SetActive(false);
 
     }
 
@@ -77,6 +80,7 @@ public class GameManager : MonoBehaviour
 
             gameOver = true;
             gameOverText.SetActive(true);
+            restartButton.SetActive(true);
         }
 
     }
