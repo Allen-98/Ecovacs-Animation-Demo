@@ -89,12 +89,11 @@ public class GameSocket : MonoBehaviour
     void OnError(WebSocket ws, Exception ex)
     {
         string errorMsg = string.Empty;
-#if !UNITY_WEBGL || UNITY_EDITOR
         if (ws.InternalRequest.Response != null)
         {
             errorMsg = string.Format("Status Code from Server: {0} and Message: {1}", ws.InternalRequest.Response.StatusCode, ws.InternalRequest.Response.Message);
         }
-#endif
+
         Debug.LogFormat("OnError: error occured: {0}\n", (ex != null ? ex.Message : "Unknown Error " + errorMsg));
         webSocket = null;
     }
